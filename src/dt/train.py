@@ -106,11 +106,11 @@ class TrainConfig:
 def train(config: TrainConfig):
     config.save_args()
     
-    wandb.init(entity=config.entity,
+    '''wandb.init(entity=config.entity,
                project=config.project, 
                group=config.group, 
                name=config.env_config.experiment_name, 
-               config=asdict(config))
+               config=asdict(config))'''
     
     train_goal_idxs, test_goal_idxs = get_goal_idxs(
         permutations_file=config.permutations_file, 
@@ -184,26 +184,26 @@ def train(config: TrainConfig):
         optim.step()
         scheduler.step()
         
-        wandb_log = {
+        '''wandb_log = {
             "step": step,
             "lr": scheduler.get_last_lr()[0],
-        }
+        }'''
         
         with torch.no_grad():
             a = torch.argmax(predicted_actions.flatten(0, 1), dim=-1)
             t = actions.flatten()
             accuracy = torch.sum(a == t) / (config.batch_size * config.seq_len)
-            wandb_log['accuracy'] = accuracy
-            wandb_log['loss'] = loss.item()
+            #wandb_log['accuracy'] = accuracy
+            #wandb_log['loss'] = loss.item()
             
             if predicted_rewards is not None:
                 r = (predicted_rewards.flatten() > 0.5).long()
                 t = rewards.flatten()
                 accuracy_reward = torch.sum(r == t) / (config.batch_size * config.seq_len)
-                wandb_log['accuracy_reward'] = accuracy_reward
-                wandb_log['loss_reward'] = loss_rewards.item()
+                #wandb_log['accuracy_reward'] = accuracy_reward
+                #wandb_log['loss_reward'] = loss_rewards.item()
 
-        wandb.log(wandb_log, step=step)
+        #wandb.log(wandb_log, step=step)
         
         if step % config.eval_freq == 0 or step == config.num_updates - 1:
             model.eval()
@@ -227,7 +227,7 @@ def train(config: TrainConfig):
                       logged_returns)
         
             model.train()
-            wandb.log(
+            '''wandb.log(
                 {
                     "eval/train_goals/mean_return": np.mean(
                         [h[-1] for h in eval_info_train.values()]
@@ -244,7 +244,7 @@ def train(config: TrainConfig):
                     "epoch": step,
                 },
                 step=step,
-            )
+            )'''
             if config.checkpoints_path is not None:
                 torch.save(
                     model.state_dict(),

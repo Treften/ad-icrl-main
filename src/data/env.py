@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from dataclasses import dataclass
-from gymnasium.wrappers.time_limit import TimeLimit
+from gymnasium.wrappers import TimeLimit
 from toymeta.dark_room import DarkRoom
 from typing import List
 

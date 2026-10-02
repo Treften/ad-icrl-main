@@ -116,7 +116,7 @@ def train(config: TrainConfig):
         permutations_file=config.permutations_file, 
         train_test_split=config.train_test_split,
         debug=config.debug)
-    
+    print(config.learning_history_dirs)
     dataset = SequenceDataset(goal_idxs=train_goal_idxs, 
                               seq_len=config.seq_len, 
                               filter_episodes=config.filter_episodes,

@@ -34,9 +34,9 @@ def get_goal_idxs(permutations_file: str = 'saved_data/permutations_9.txt',
     return train_idxs, test_idxs
 
 LEARNING_HISTORY_DIRS = [
-    "../../input/Dark-Room_PPO/saved_data/learning_history/ppo-01",
-    "../../input/Dark-Room_PPO/saved_data/learning_history/ppo-02",
-    "../../input/Dark-Room_PPO/saved_data/learning_history/ppo-03"]
+    "../../input/datasets/desfr1/tDark-Room_PPO/saved_data/learning_history/ppo-01",
+    "../../input/datasets/desfr1t/Dark-Room_PPO/saved_data/learning_history/ppo-02",
+    "../../input/datasets/desfr1t/Dark-Room_PPO/saved_data/learning_history/ppo-03"]
 
 @dataclass
 class TrainConfig:

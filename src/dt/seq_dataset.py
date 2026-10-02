@@ -8,7 +8,7 @@ from torch.utils.data import IterableDataset
 def load_learning_history(
     goal_idx: int = 0,
     exp_name: str = "darkroom",
-    learning_history_dirs: str | List[str] = "saved_data/learning_history/ppo",
+    learning_history_dirs: str | List[str] = "../../input/Dark-Room_PPO/saved_data/learning_history/ppo",
     max_episodes: int = -1,
     filter_episodes: int = 1,
     episode_lenght: int = 20,

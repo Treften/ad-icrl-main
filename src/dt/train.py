@@ -217,7 +217,7 @@ def train(config: TrainConfig):
                                                         model, test_goal_idxs, 
                                                         config.eval_episodes, 
                                                         device, config.eval_seed)            
-            print("eval train:\n")
+            '''print("eval train:\n")
             for goal_idx, logged_returns in eval_info_train.items():
                 print("goal:", goal_idx, 
                       "max reward:", max_episode_reward(goal_idx),
@@ -226,7 +226,7 @@ def train(config: TrainConfig):
             for goal_idx, logged_returns in eval_info_test.items():
                 print("goal:", goal_idx, 
                       "max reward:", max_episode_reward(goal_idx),
-                      logged_returns)
+                      logged_returns)'''
         
             model.train()
             '''wandb.log(

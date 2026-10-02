@@ -106,6 +106,7 @@ class TrainConfig:
 def train(config: TrainConfig):
     config.save_args()
     print(DEVICE)
+    print(config.num_workers)
     '''wandb.init(entity=config.entity,
                project=config.project, 
                group=config.group, 

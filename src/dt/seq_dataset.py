@@ -36,6 +36,7 @@ def load_learning_history(
     # Search for files with learning histories for the specified goals    
     filepaths = [os.path.join(learning_history_dir, x) for learning_history_dir in learning_history_dirs \
         for x in os.listdir(learning_history_dir) if f"{exp_name}-goal={goal_idx:02d}" in x]
+    print(filepaths)
     assert len(filepaths) == len(learning_history_dirs), f"The input directories ({learning_history_dirs}) "\
         f"contain more than 1 history or no histories ({filepaths}). Check the data in input directories."
 

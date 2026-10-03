@@ -121,24 +121,32 @@ class Evaluator:
             
                 eval_info_train.append(_eval_info_train)
                 eval_info_test.append(_eval_info_test)
-                save_dir = "saved_data/logs"
-                os.makedirs(save_dir, exist_ok=True)
 
-                file_path = os.path.join(save_dir, f"eval_results_{seed + n_repeat}.json")
-
-                with open(file_path, "w", encoding="utf-8") as f:
-                    json.dump({
-                        "eval_info_train": _eval_info_train,
-                        "eval_info_test": _eval_info_test
-                    }, f, ensure_ascii=False, indent=4)
-
-                print(f"Evaluation results saved to {file_path}")
             eval_info_train = np.vstack([np.mean( [x[key] for x in eval_info_train], axis=0) \
                 for key in eval_info_train[0].keys()])
             
             eval_info_test = np.vstack([np.mean( [x[key] for x in eval_info_test], axis=0) \
                 for key in eval_info_test[0].keys()])
-            
+
+            save_dir = os.path.join(self.out_dir, "results")
+            os.makedirs(save_dir, exist_ok=True)
+
+            file_path = os.path.join(
+                save_dir,
+                f"eval_results_{self.experiment_name}_{n_steps}.json"
+            )
+
+            with open(file_path, "w", encoding="utf-8") as f:
+                json.dump({
+                    "eval_info_train": eval_info_train.tolist(),
+                    "eval_info_test": eval_info_test.tolist(),
+                    "n_steps": n_steps,
+                    "seed": seed,
+                    "n_repeats": n_repeats,
+                    "eval_episodes": eval_episodes,
+                }, f, ensure_ascii=False, indent=4)
+
+            print(f"Evaluation results saved to {file_path}")
             plt.errorbar(np.arange(eval_info_train.shape[1]), 
                         np.mean(eval_info_train, axis=0),
                         np.std(eval_info_train, axis=0), label=f'train ({eval_info_train.shape[0]} tasks)')

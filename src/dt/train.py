@@ -22,7 +22,10 @@ from src.data.generate_goals import max_episode_reward
 DEVICE = os.getenv("DEVICE", "cpu")
 if "cuda" in DEVICE:
     assert torch.cuda.is_available()
-
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.backends.cudnn.allow_tf32 = True
+    torch.set_float32_matmul_precision("high")
+    
 def get_goal_idxs(permutations_file: str = 'saved_data/permutations_9.txt',
                   train_test_split: float = 0.3,
                   debug: bool = False):

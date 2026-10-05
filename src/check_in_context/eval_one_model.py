@@ -78,10 +78,8 @@ class Evaluator:
             permutations_file=self.config.permutations_file, 
             train_test_split=self.config.train_test_split,
             debug=self.config.debug)
-        DEVICE = os.getenv("DEVICE", "cpu")
-        if "cuda" in DEVICE:
-            assert torch.cuda.is_available()
-        device = torch.device(DEVICE)
+  
+        device = torch.device('cpu')
 
         tmp_env = self.config.env_config.init_env()
         model = DecisionTransformer(

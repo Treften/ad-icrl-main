@@ -78,8 +78,10 @@ class Evaluator:
             permutations_file=self.config.permutations_file, 
             train_test_split=self.config.train_test_split,
             debug=self.config.debug)
-
-        device = torch.device('cpu')
+        DEVICE = os.getenv("DEVICE", "cpu")
+        if "cuda" in DEVICE:
+            assert torch.cuda.is_available()
+        device = torch.device(DEVICE)
 
         tmp_env = self.config.env_config.init_env()
         model = DecisionTransformer(
@@ -147,6 +149,10 @@ class Evaluator:
                 }, f, ensure_ascii=False, indent=4)
 
             print(f"Evaluation results saved to {file_path}")
+            print("train mean: "+str(np.mean(eval_info_train, axis=0)))
+            print("train std: "+str(np.std(eval_info_train, axis=0)))
+            print("test mean: "+str(np.mean(eval_info_test, axis=0)))
+            print("test std: "+str(np.std(eval_info_test, axis=0)))
             plt.errorbar(np.arange(eval_info_train.shape[1]), 
                         np.mean(eval_info_train, axis=0),
                         np.std(eval_info_train, axis=0), label=f'train ({eval_info_train.shape[0]} tasks)')

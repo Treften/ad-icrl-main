@@ -155,7 +155,7 @@ def train(config: TrainConfig):
             weight_decay=config.weight_decay,
             betas=config.betas,
     )
-    
+    scaler = torch.amp.GradScaler("cuda")
     scheduler = cosine_annealing_with_warmup(
         optimizer=optim,
         warmup_steps=config.warmup_steps,
@@ -166,24 +166,37 @@ def train(config: TrainConfig):
     for step in trange(config.num_updates, desc="Training"):
         batch = next(dataloader_iter)
         states, actions, rewards = [b.to(device) for b in batch]
+        
+        with torch.autocast(device_type="cuda", dtype=torch.float16):
+            predicted_actions, predicted_rewards = model(
+                states=states,
+                actions=actions,
+                rewards=rewards
+            )
 
-        predicted_actions, predicted_rewards = model(
-            states=states,
-            actions=actions,
-            rewards=rewards)
-        loss = F.cross_entropy(
-            predicted_actions.flatten(0, 1),
-            actions.detach().flatten(0, 1))
-        loss_rewards = 0 if predicted_rewards is None else \
-        F.binary_cross_entropy_with_logits(
-            predicted_rewards.flatten(0, 1),
-            rewards.detach().flatten(0, 1).float())
-         
-        optim.zero_grad()
-        (loss + loss_rewards).backward()
+            loss = F.cross_entropy(
+                predicted_actions.flatten(0, 1),
+                actions.flatten(0, 1)
+            )
+
+            loss_rewards = (
+                0 if predicted_rewards is None
+                else F.binary_cross_entropy_with_logits(
+                    predicted_rewards.flatten(0, 1),
+                    rewards.flatten(0, 1).float()
+                )
+            )
+
+            total_loss = loss + loss_rewards
+
+        scaler.scale(total_loss).backward()
+        scaler.unscale_(optim)
+
         if config.clip_grad is not None:
             torch.nn.utils.clip_grad_norm_(model.parameters(), config.clip_grad)
-        optim.step()
+
+        scaler.step(optim)
+        scaler.update()
         scheduler.step()
         
         '''wandb_log = {

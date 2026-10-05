@@ -127,7 +127,8 @@ def train(config: TrainConfig):
     dataloader = DataLoader(dataset,
                             batch_size=config.batch_size,
                             pin_memory=True,
-                            num_workers=config.num_workers)
+                            num_workers=config.num_workers,
+                            persistent_workers=config.num_workers > 0)
 
     device = torch.device(DEVICE)
 

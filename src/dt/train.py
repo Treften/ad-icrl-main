@@ -9,6 +9,7 @@ import wandb
 import numpy as np
 import torch
 from torch.utils.data import DataLoader
+from clearml import Task, Logger
 from torch.nn import functional as F  # noqa
 
 from src.data.env import SetupDarkRoom
@@ -111,12 +112,17 @@ def train(config: TrainConfig):
     print(DEVICE)
     print(config.num_workers)
     print(config.num_updates)
+    
     '''wandb.init(entity=config.entity,
                project=config.project, 
                group=config.group, 
                name=config.env_config.experiment_name, 
                config=asdict(config))'''
-    
+    task = Task.init(
+        project_name='New_dark_room', 
+        task_name='InC', 
+        tags=['dark_room'])
+    logger = task.get_logger() 
     train_goal_idxs, test_goal_idxs = get_goal_idxs(
         permutations_file=config.permutations_file, 
         train_test_split=config.train_test_split,
@@ -214,14 +220,16 @@ def train(config: TrainConfig):
             accuracy = torch.sum(a == t) / (config.batch_size * config.seq_len)
             #wandb_log['accuracy'] = accuracy
             #wandb_log['loss'] = loss.item()
-            
+            if step % 1000 == 0:
+                logger.report_scalar(title="Training", series="accuracy", value=loss.item(), iteration=step)
+                logger.report_scalar(title="Training", series="loss", value=accuracy, iteration=step)
             if predicted_rewards is not None:
                 r = (predicted_rewards.flatten() > 0.5).long()
                 t = rewards.flatten()
                 accuracy_reward = torch.sum(r == t) / (config.batch_size * config.seq_len)
                 #wandb_log['accuracy_reward'] = accuracy_reward
                 #wandb_log['loss_reward'] = loss_rewards.item()
-
+        
         #wandb.log(wandb_log, step=step)
         
         if step % config.eval_freq == 0 or step == config.num_updates - 1:
@@ -264,6 +272,10 @@ def train(config: TrainConfig):
                 },
                 step=step,
             )'''
+            logger.report_scalar(title="Eval", series="train_mean_return", value=np.mean([h[-1] for h in eval_info_train.values()], iteration=step))
+            logger.report_scalar(title="Training", series="train_median_return", value=np.median([h[-1] for h in eval_info_train.values()], iteration=step))
+            logger.report_scalar(title="Eval", series="test_mean_return", value=np.mean([h[-1] for h in eval_info_test.values()], iteration=step))
+            logger.report_scalar(title="Training", series="test_median_return", value=np.median([h[-1] for h in eval_info_test.values()], iteration=step))
             if config.checkpoints_path is not None:
                 torch.save(
                     model.state_dict(),
@@ -282,6 +294,20 @@ def train(config: TrainConfig):
                     os.path.join(
                         config.checkpoints_path, f"scheduler_{step}.pt"
                     ),
+                )
+                task.upload_artifact(
+                    name=f"model_{step}",
+                    artifact_object=config.checkpoints_path,
+                )
+
+                task.upload_artifact(
+                    name=f"optim_{step}",
+                    artifact_object=config.checkpoints_path,
+                )
+
+                task.upload_artifact(
+                    name=f"scheduler_{step}",
+                    artifact_object=config.checkpoints_path,
                 )
                 
     if config.checkpoints_path is not None:

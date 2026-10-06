@@ -272,10 +272,10 @@ def train(config: TrainConfig):
                 },
                 step=step,
             )'''
-            logger.report_scalar(title="Eval", series="train_mean_return", value=np.mean([h[-1] for h in eval_info_train.values()], iteration=step))
-            logger.report_scalar(title="Training", series="train_median_return", value=np.median([h[-1] for h in eval_info_train.values()], iteration=step))
-            logger.report_scalar(title="Eval", series="test_mean_return", value=np.mean([h[-1] for h in eval_info_test.values()], iteration=step))
-            logger.report_scalar(title="Training", series="test_median_return", value=np.median([h[-1] for h in eval_info_test.values()], iteration=step))
+            logger.report_scalar(title="Eval", series="train_mean_return", value=np.mean([h[-1] for h in eval_info_train.values()]), iteration=step)
+            logger.report_scalar(title="Training", series="train_median_return", value=np.median([h[-1] for h in eval_info_train.values()]), iteration=step)
+            logger.report_scalar(title="Eval", series="test_mean_return", value=np.mean([h[-1] for h in eval_info_test.values()]), iteration=step)
+            logger.report_scalar(title="Training", series="test_median_return", value=np.median([h[-1] for h in eval_info_test.values()]), iteration=step)
             if config.checkpoints_path is not None:
                 torch.save(
                     model.state_dict(),

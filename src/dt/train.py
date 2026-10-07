@@ -4,12 +4,14 @@ from dataclasses import dataclass, asdict, field
 import yaml
 from typing import Tuple, Optional, List, Literal
 from tqdm.auto import trange
+
 import wandb
 import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from clearml import Task, Logger
 from torch.nn import functional as F  # noqa
+
 from src.data.env import SetupDarkRoom
 from src.dt.seq_dataset import SequenceDataset
 from src.dt.model import DecisionTransformer

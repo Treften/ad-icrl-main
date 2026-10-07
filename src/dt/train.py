@@ -221,8 +221,8 @@ def train(config: TrainConfig):
             #wandb_log['accuracy'] = accuracy
             #wandb_log['loss'] = loss.item()
             if step % 1000 == 0:
-                logger.report_scalar(title="Training", series="accuracy", value=loss.item(), iteration=step)
-                logger.report_scalar(title="Training", series="loss", value=accuracy, iteration=step)
+                logger.report_scalar(title="Training", series="loss", value=loss.item(), iteration=step)
+                logger.report_scalar(title="Training", series="accuracy", value=accuracy, iteration=step)
             if predicted_rewards is not None:
                 r = (predicted_rewards.flatten() > 0.5).long()
                 t = rewards.flatten()

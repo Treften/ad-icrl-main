@@ -197,8 +197,8 @@ def train(config: TrainConfig):
         pin_memory=True,
     )
 
-    device = torch.device(DEVICE)
-
+    #device = torch.device(DEVICE)
+    device = torch.device(f"cuda:{local_rank}")
     tmp_env = config.env_config.init_env()
     model = DecisionTransformer(
         state_dim=tmp_env.observation_space.n, # 81

@@ -133,34 +133,11 @@ def train(config: TrainConfig):
                               filter_episodes=config.filter_episodes,
                               learning_history_dirs=config.learning_history_dirs)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    train_sampler = DistributedSampler(
-    dataset,
-    num_replicas=world_size,
-    rank=rank,
-    shuffle=True,
-    drop_last=True,
-)
-
->>>>>>> parent of 1a87f66 (loader fix)
-    dataloader = DataLoader(
-        dataset,
-        batch_size=config.batch_size // world_size,
-        sampler=train_sampler,
-        pin_memory=True,
-        num_workers=config.num_workers,
-        persistent_workers=config.num_workers > 0,
-        drop_last=True,
-    )
-=======
     dataloader = DataLoader(dataset,
                             batch_size=config.batch_size,
                             pin_memory=True,
                             num_workers=config.num_workers,
                             persistent_workers=config.num_workers > 0)
->>>>>>> parent of b3f12a3 (ddp)
 
     device = torch.device(DEVICE)
 
@@ -244,19 +221,8 @@ def train(config: TrainConfig):
             #wandb_log['accuracy'] = accuracy
             #wandb_log['loss'] = loss.item()
             if step % 1000 == 0:
-<<<<<<< HEAD
-<<<<<<< HEAD
-                if rank == 0:
-                    logger.report_scalar(title="Training", series="loss", value=loss.item(), iteration=step)
-                    logger.report_scalar(title="Training", series="accuracy", value=accuracy, iteration=step)
-=======
                 logger.report_scalar(title="Training", series="accuracy", value=loss.item(), iteration=step)
                 logger.report_scalar(title="Training", series="loss", value=accuracy, iteration=step)
->>>>>>> parent of b3f12a3 (ddp)
-=======
-                logger.report_scalar(title="Training", series="loss", value=loss.item(), iteration=step)
-                logger.report_scalar(title="Training", series="accuracy", value=accuracy, iteration=step)
->>>>>>> parent of 1c9d766 (log fix)
             if predicted_rewards is not None:
                 r = (predicted_rewards.flatten() > 0.5).long()
                 t = rewards.flatten()
@@ -306,27 +272,11 @@ def train(config: TrainConfig):
                 },
                 step=step,
             )'''
-<<<<<<< HEAD
-<<<<<<< HEAD
-            if rank == 0:
-                logger.report_scalar(title="Eval", series="train_mean_return", value=np.mean([h[-1] for h in eval_info_train.values()]), iteration=step)
-                logger.report_scalar(title="Training", series="train_median_return", value=np.median([h[-1] for h in eval_info_train.values()]), iteration=step)
-                logger.report_scalar(title="Eval", series="test_mean_return", value=np.mean([h[-1] for h in eval_info_test.values()]), iteration=step)
-                logger.report_scalar(title="Training", series="test_median_return", value=np.median([h[-1] for h in eval_info_test.values()]), iteration=step)
-=======
-            logger.report_scalar(title="Eval", series="train_mean_return", value=np.mean([h[-1] for h in eval_info_train.values()]), iteration=step)
-            logger.report_scalar(title="Training", series="train_median_return", value=np.median([h[-1] for h in eval_info_train.values()]), iteration=step)
-            logger.report_scalar(title="Eval", series="test_mean_return", value=np.mean([h[-1] for h in eval_info_test.values()]), iteration=step)
-            logger.report_scalar(title="Training", series="test_median_return", value=np.median([h[-1] for h in eval_info_test.values()]), iteration=step)
->>>>>>> parent of 1c9d766 (log fix)
-            if rank == 0 and config.checkpoints_path is not None:
-=======
             logger.report_scalar(title="Eval", series="train_mean_return", value=np.mean([h[-1] for h in eval_info_train.values()]), iteration=step)
             logger.report_scalar(title="Training", series="train_median_return", value=np.median([h[-1] for h in eval_info_train.values()]), iteration=step)
             logger.report_scalar(title="Eval", series="test_mean_return", value=np.mean([h[-1] for h in eval_info_test.values()]), iteration=step)
             logger.report_scalar(title="Training", series="test_median_return", value=np.median([h[-1] for h in eval_info_test.values()]), iteration=step)
             if config.checkpoints_path is not None:
->>>>>>> parent of b3f12a3 (ddp)
                 torch.save(
                     model.state_dict(),
                     os.path.join(

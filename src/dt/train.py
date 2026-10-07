@@ -17,7 +17,7 @@ from src.dt.seq_dataset import SequenceDataset
 from src.dt.model import DecisionTransformer
 from src.dt.schedule import cosine_annealing_with_warmup
 from src.dt.eval import evaluate_in_context
-import random
+
 from src.data.generate_goals import max_episode_reward
 
 DEVICE = os.getenv("DEVICE", "cpu")
@@ -107,14 +107,6 @@ class TrainConfig:
             config_file.write(yaml.safe_dump(asdict(self)))
 
 
-def worker_init_fn(worker_id):
-    worker_info = torch.utils.data.get_worker_info()
-
-    seed = torch.initial_seed() % (2**32)
-
-    np.random.seed(seed)
-    random.seed(seed)
-
 def train(config: TrainConfig):
     config.save_args()
     print(DEVICE)
@@ -142,12 +134,25 @@ def train(config: TrainConfig):
                               learning_history_dirs=config.learning_history_dirs)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    train_sampler = DistributedSampler(
+    dataset,
+    num_replicas=world_size,
+    rank=rank,
+    shuffle=True,
+    drop_last=True,
+)
+
+>>>>>>> parent of 1a87f66 (loader fix)
     dataloader = DataLoader(
         dataset,
-        batch_size=config.batch_size,
-        num_workers=config.num_workers,
-        worker_init_fn=worker_init_fn,
+        batch_size=config.batch_size // world_size,
+        sampler=train_sampler,
         pin_memory=True,
+        num_workers=config.num_workers,
+        persistent_workers=config.num_workers > 0,
+        drop_last=True,
     )
 =======
     dataloader = DataLoader(dataset,

@@ -162,8 +162,8 @@ def train(config: TrainConfig):
                             persistent_workers=config.num_workers > 0)
 >>>>>>> parent of b3f12a3 (ddp)
 
-    #device = torch.device(DEVICE)
-    device = torch.device(f"cuda:{local_rank}")
+    device = torch.device(DEVICE)
+
     tmp_env = config.env_config.init_env()
     model = DecisionTransformer(
         state_dim=tmp_env.observation_space.n, # 81

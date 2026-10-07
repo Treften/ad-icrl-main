@@ -18,7 +18,7 @@ from src.dt.seq_dataset import SequenceDataset
 from src.dt.model import DecisionTransformer
 from src.dt.schedule import cosine_annealing_with_warmup
 from src.dt.eval import evaluate_in_context
-
+import random
 from src.data.generate_goals import max_episode_reward
 
 DEVICE = os.getenv("DEVICE", "cpu")
@@ -134,6 +134,14 @@ def reduce_mean(value: torch.Tensor) -> torch.Tensor:
     value /= dist.get_world_size()
     return value
 
+def worker_init_fn(worker_id):
+    worker_info = torch.utils.data.get_worker_info()
+
+    seed = torch.initial_seed() % (2**32)
+
+    np.random.seed(seed)
+    random.seed(seed)
+
 def train(config: TrainConfig):
 
     local_rank, rank, world_size, device = setup_ddp()
@@ -181,22 +189,12 @@ def train(config: TrainConfig):
                               filter_episodes=config.filter_episodes,
                               learning_history_dirs=config.learning_history_dirs)
 
-    train_sampler = DistributedSampler(
-    dataset,
-    num_replicas=world_size,
-    rank=rank,
-    shuffle=True,
-    drop_last=True,
-)
-
     dataloader = DataLoader(
         dataset,
-        batch_size=config.batch_size // world_size,
-        sampler=train_sampler,
-        pin_memory=True,
+        batch_size=config.batch_size,
         num_workers=config.num_workers,
-        persistent_workers=config.num_workers > 0,
-        drop_last=True,
+        worker_init_fn=worker_init_fn,
+        pin_memory=True,
     )
 
     device = torch.device(DEVICE)

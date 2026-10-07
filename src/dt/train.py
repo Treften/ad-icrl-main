@@ -11,6 +11,9 @@ import torch
 from torch.utils.data import DataLoader
 from clearml import Task, Logger
 from torch.nn import functional as F  # noqa
+import torch_xla
+import torch_xla.core.xla_model as xm
+
 
 from src.data.env import SetupDarkRoom
 from src.dt.seq_dataset import SequenceDataset
@@ -26,7 +29,7 @@ if "cuda" in DEVICE:
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
     torch.set_float32_matmul_precision("high")
-    
+   
 def get_goal_idxs(permutations_file: str = 'saved_data/permutations_9.txt',
                   train_test_split: float = 0.3,
                   debug: bool = False):
@@ -139,7 +142,8 @@ def train(config: TrainConfig):
                             num_workers=config.num_workers,
                             persistent_workers=config.num_workers > 0)
 
-    device = torch.device(DEVICE)
+    device = xm.xla_device()
+    print(device) 
 
     tmp_env = config.env_config.init_env()
     model = DecisionTransformer(
@@ -177,7 +181,7 @@ def train(config: TrainConfig):
         batch = next(dataloader_iter)
         states, actions, rewards = [b.to(device) for b in batch]
         
-        with torch.autocast(device_type="cuda", dtype=torch.float16):
+        with torch.autocast(device_type="xla", dtype=torch.bfloat16):
             predicted_actions, predicted_rewards = model(
                 states=states,
                 actions=actions,
@@ -199,14 +203,16 @@ def train(config: TrainConfig):
 
             total_loss = loss + loss_rewards
 
-        scaler.scale(total_loss).backward()
-        scaler.unscale_(optim)
+        total_loss.backward()
 
         if config.clip_grad is not None:
-            torch.nn.utils.clip_grad_norm_(model.parameters(), config.clip_grad)
+            torch.nn.utils.clip_grad_norm_(
+                model.parameters(),
+                config.clip_grad
+            )
 
-        scaler.step(optim)
-        scaler.update()
+        xm.optimizer_step(optim)
+
         scheduler.step()
         
         '''wandb_log = {

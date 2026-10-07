@@ -4,15 +4,12 @@ from dataclasses import dataclass, asdict, field
 import yaml
 from typing import Tuple, Optional, List, Literal
 from tqdm.auto import trange
-import torch.distributed as dist
 import wandb
 import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from clearml import Task, Logger
 from torch.nn import functional as F  # noqa
-from torch.nn.parallel import DistributedDataParallel as DDP
-from torch.utils.data import DataLoader, DistributedSampler
 from src.data.env import SetupDarkRoom
 from src.dt.seq_dataset import SequenceDataset
 from src.dt.model import DecisionTransformer
@@ -107,32 +104,6 @@ class TrainConfig:
         with open(config_file_path, "w") as config_file:
             config_file.write(yaml.safe_dump(asdict(self)))
 
-def setup_ddp():
-    dist.init_process_group(backend="nccl")
-
-    local_rank = int(os.environ["LOCAL_RANK"])
-    rank = int(os.environ["RANK"])
-    world_size = int(os.environ["WORLD_SIZE"])
-
-    torch.cuda.set_device(local_rank)
-    device = torch.device(f"cuda:{local_rank}")
-
-    return local_rank, rank, world_size, device
-
-
-def cleanup_ddp():
-    dist.destroy_process_group()
-
-
-def is_main_process():
-    return dist.get_rank() == 0
-
-
-def reduce_mean(value: torch.Tensor) -> torch.Tensor:
-    value = value.detach().clone()
-    dist.all_reduce(value, op=dist.ReduceOp.SUM)
-    value /= dist.get_world_size()
-    return value
 
 def worker_init_fn(worker_id):
     worker_info = torch.utils.data.get_worker_info()
@@ -143,23 +114,7 @@ def worker_init_fn(worker_id):
     random.seed(seed)
 
 def train(config: TrainConfig):
-
-    local_rank, rank, world_size, device = setup_ddp()
-
-    if rank == 0:
-        config.save_args()
-
-        print(f"Using {world_size} GPUs")
-        print(f"Global batch size: {config.batch_size}")
-        print(f"Per-GPU batch size: {config.batch_size // world_size}")
-        print(f"num_workers: {config.num_workers}")
-        print(f"num_updates: {config.num_updates}")
-
-    if config.batch_size % world_size != 0:
-        raise ValueError(
-            f"batch_size={config.batch_size} must be divisible by "
-            f"world_size={world_size}"
-        )
+    config.save_args()
     print(DEVICE)
     print(config.num_workers)
     print(config.num_updates)
@@ -169,16 +124,11 @@ def train(config: TrainConfig):
                group=config.group, 
                name=config.env_config.experiment_name, 
                config=asdict(config))'''
-    task = None
-    logger = None
-
-    if rank == 0:
-        task = Task.init(
-            project_name="New_dark_room",
-            task_name="InC",
-            tags=["dark_room"],
-        )
-        logger = task.get_logger()
+    task = Task.init(
+        project_name='New_dark_room', 
+        task_name='InC', 
+        tags=['dark_room'])
+    logger = task.get_logger() 
     train_goal_idxs, test_goal_idxs = get_goal_idxs(
         permutations_file=config.permutations_file, 
         train_test_split=config.train_test_split,
@@ -189,6 +139,7 @@ def train(config: TrainConfig):
                               filter_episodes=config.filter_episodes,
                               learning_history_dirs=config.learning_history_dirs)
 
+<<<<<<< HEAD
     dataloader = DataLoader(
         dataset,
         batch_size=config.batch_size,
@@ -196,6 +147,13 @@ def train(config: TrainConfig):
         worker_init_fn=worker_init_fn,
         pin_memory=True,
     )
+=======
+    dataloader = DataLoader(dataset,
+                            batch_size=config.batch_size,
+                            pin_memory=True,
+                            num_workers=config.num_workers,
+                            persistent_workers=config.num_workers > 0)
+>>>>>>> parent of b3f12a3 (ddp)
 
     #device = torch.device(DEVICE)
     device = torch.device(f"cuda:{local_rank}")
@@ -223,11 +181,6 @@ def train(config: TrainConfig):
             weight_decay=config.weight_decay,
             betas=config.betas,
     )
-    model = DDP(
-    model,
-    device_ids=[local_rank],
-    output_device=local_rank,
-)
     scaler = torch.amp.GradScaler("cuda")
     scheduler = cosine_annealing_with_warmup(
         optimizer=optim,
@@ -238,7 +191,7 @@ def train(config: TrainConfig):
     dataloader_iter = iter(dataloader)
     for step in trange(config.num_updates, desc="Training"):
         batch = next(dataloader_iter)
-        states, actions, rewards = [b.to(device, non_blocking=True) for b in batch]
+        states, actions, rewards = [b.to(device) for b in batch]
         
         with torch.autocast(device_type="cuda", dtype=torch.float16):
             predicted_actions, predicted_rewards = model(
@@ -280,78 +233,37 @@ def train(config: TrainConfig):
         with torch.no_grad():
             a = torch.argmax(predicted_actions.flatten(0, 1), dim=-1)
             t = actions.flatten()
-            local_correct = torch.sum(a == t).float()
-            local_total = torch.tensor(
-                t.numel(),
-                device=device,
-                dtype=torch.float32,
-            )
-
-            dist.all_reduce(local_correct, op=dist.ReduceOp.SUM)
-            dist.all_reduce(local_total, op=dist.ReduceOp.SUM)
-
-            accuracy = local_correct / local_total
+            accuracy = torch.sum(a == t) / (config.batch_size * config.seq_len)
             #wandb_log['accuracy'] = accuracy
             #wandb_log['loss'] = loss.item()
             if step % 1000 == 0:
+<<<<<<< HEAD
                 if rank == 0:
                     logger.report_scalar(title="Training", series="loss", value=loss.item(), iteration=step)
                     logger.report_scalar(title="Training", series="accuracy", value=accuracy, iteration=step)
+=======
+                logger.report_scalar(title="Training", series="accuracy", value=loss.item(), iteration=step)
+                logger.report_scalar(title="Training", series="loss", value=accuracy, iteration=step)
+>>>>>>> parent of b3f12a3 (ddp)
             if predicted_rewards is not None:
                 r = (predicted_rewards.flatten() > 0.5).long()
                 t = rewards.flatten()
-                local_correct_reward = torch.sum(r == t).float()
-                local_total_reward = torch.tensor(
-                    t.numel(),
-                    device=device,
-                    dtype=torch.float32,
-                )
-
-                dist.all_reduce(
-                    local_correct_reward,
-                    op=dist.ReduceOp.SUM,
-                )
-                dist.all_reduce(
-                    local_total_reward,
-                    op=dist.ReduceOp.SUM,
-                )
-
-                accuracy_reward = local_correct_reward / local_total_reward
+                accuracy_reward = torch.sum(r == t) / (config.batch_size * config.seq_len)
                 #wandb_log['accuracy_reward'] = accuracy_reward
                 #wandb_log['loss_reward'] = loss_rewards.item()
         
         #wandb.log(wandb_log, step=step)
         
         if step % config.eval_freq == 0 or step == config.num_updates - 1:
-
-            dist.barrier()
-
-            if rank == 0:
-                model.eval()
-
-                raw_model = model.module
-
-                eval_info_train, debug_info_train = evaluate_in_context(
-                    config.env_config,
-                    raw_model,
-                    train_goal_idxs,
-                    config.eval_episodes,
-                    device,
-                    config.eval_seed,
-                )
-
-                eval_info_test, debug_info_test = evaluate_in_context(
-                    config.env_config,
-                    raw_model,
-                    test_goal_idxs,
-                    config.eval_episodes,
-                    device,
-                    config.eval_seed,
-                )
-
-                model.train()
-
-            dist.barrier()        
+            model.eval()
+            eval_info_train, debug_info_train = evaluate_in_context(config.env_config, 
+                                                        model, train_goal_idxs, 
+                                                        config.eval_episodes, 
+                                                        device, config.eval_seed)
+            eval_info_test, debug_info_test = evaluate_in_context(config.env_config, 
+                                                        model, test_goal_idxs, 
+                                                        config.eval_episodes, 
+                                                        device, config.eval_seed)            
             '''print("eval train:\n")
             for goal_idx, logged_returns in eval_info_train.items():
                 print("goal:", goal_idx, 
@@ -382,12 +294,20 @@ def train(config: TrainConfig):
                 },
                 step=step,
             )'''
+<<<<<<< HEAD
             if rank == 0:
                 logger.report_scalar(title="Eval", series="train_mean_return", value=np.mean([h[-1] for h in eval_info_train.values()]), iteration=step)
                 logger.report_scalar(title="Training", series="train_median_return", value=np.median([h[-1] for h in eval_info_train.values()]), iteration=step)
                 logger.report_scalar(title="Eval", series="test_mean_return", value=np.mean([h[-1] for h in eval_info_test.values()]), iteration=step)
                 logger.report_scalar(title="Training", series="test_median_return", value=np.median([h[-1] for h in eval_info_test.values()]), iteration=step)
             if rank == 0 and config.checkpoints_path is not None:
+=======
+            logger.report_scalar(title="Eval", series="train_mean_return", value=np.mean([h[-1] for h in eval_info_train.values()]), iteration=step)
+            logger.report_scalar(title="Training", series="train_median_return", value=np.median([h[-1] for h in eval_info_train.values()]), iteration=step)
+            logger.report_scalar(title="Eval", series="test_mean_return", value=np.mean([h[-1] for h in eval_info_test.values()]), iteration=step)
+            logger.report_scalar(title="Training", series="test_median_return", value=np.median([h[-1] for h in eval_info_test.values()]), iteration=step)
+            if config.checkpoints_path is not None:
+>>>>>>> parent of b3f12a3 (ddp)
                 torch.save(
                     model.state_dict(),
                     os.path.join(
@@ -421,11 +341,10 @@ def train(config: TrainConfig):
                     artifact_object=config.checkpoints_path,
                 )
                 
-    if  rank == 0 and config.checkpoints_path is not None:
+    if config.checkpoints_path is not None:
         torch.save(
             model.state_dict(), os.path.join(config.checkpoints_path, f"MODEL_last.pt")
         )
-    cleanup_ddp()
         
 if __name__ == "__main__":
     tyro.cli(train)

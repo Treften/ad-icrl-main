@@ -72,9 +72,9 @@ class TrainConfig:
     
     # ---- optimizer params ----
     learning_rate: float = 3e-4  # Learning rate for the optimizer
-    weight_decay: float = 1e-4  # Weight decay for regularization
+    weight_decay: float = 1e-3  # Weight decay for regularization
     betas: Tuple[float, float] = (0.9, 0.999)  # Coefficients used for computing running averages in Adam optimizer
-    warmup_steps: int = 5_000  # Number of warmup steps for learning rate scheduling  # 1000
+    warmup_steps: int = 10000  # Number of warmup steps for learning rate scheduling  # 1000
     clip_grad: Optional[float] = 1.0  # Gradient clipping value to prevent exploding gradients
 
     # ---- dataloader params ---- 

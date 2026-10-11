@@ -112,7 +112,7 @@ def train(config: TrainConfig):
     print(DEVICE)
     print(config.num_workers)
     print(config.num_updates)
-    
+    print(config.checkpoints_path)
     '''wandb.init(entity=config.entity,
                project=config.project, 
                group=config.group, 

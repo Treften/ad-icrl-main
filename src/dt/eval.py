@@ -20,7 +20,8 @@ def evaluate_in_context(env_config: SetupDarkRoom,
                         mode: Literal["mode", "sample"] = "mode"):
     vec_env = SyncVectorEnv(
         [lambda goal_idx=goal_idx: env_config.get_cls()(goal_index=goal_idx,
-                                              enable_monitor_logs=False).init_env()
+                                              enable_monitor_logs=False,
+                                              autoreset_mode=AutoresetMode.SAME_STEP).init_env()
         for goal_idx in goal_idxs])
 
     states = torch.zeros(

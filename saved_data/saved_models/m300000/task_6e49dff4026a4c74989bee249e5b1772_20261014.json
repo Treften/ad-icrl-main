@@ -1,0 +1,900 @@
+{
+  "exported_at": "2026-10-14T10:05:09.813Z",
+  "task": {
+    "active_duration": 30702,
+    "comment": "Auto-generated at 2026-10-07 10:51:17 UTC by root@ea9e4dcc1d1e",
+    "company": {
+      "id": "af5cea770bda4e658c149423e444eefc"
+    },
+    "completed": "2026-10-07T19:23:05.984000+00:00",
+    "configuration": {},
+    "container": {},
+    "created": "2026-10-07T10:51:19.082000+00:00",
+    "execution": {},
+    "hyperparams": {
+      "TF_DEFINE": {
+        "logtostderr": {
+          "section": "TF_DEFINE",
+          "name": "logtostderr",
+          "value": "False",
+          "type": "bool",
+          "description": "Should only log to stderr?"
+        },
+        "alsologtostderr": {
+          "section": "TF_DEFINE",
+          "name": "alsologtostderr",
+          "value": "False",
+          "type": "bool",
+          "description": "also log to stderr?"
+        },
+        "log_dir": {
+          "section": "TF_DEFINE",
+          "name": "log_dir",
+          "value": "",
+          "type": "string",
+          "description": "directory to write logfiles into"
+        },
+        "v": {
+          "section": "TF_DEFINE",
+          "name": "v",
+          "value": "-1",
+          "type": "int",
+          "description": "Logging verbosity level. Messages logged at this level or lower will be included. Set to 1 for debug logging. If the flag was not set or supplied, the value will be changed from the default of -1 (warning) to 0 (info) after flags are parsed."
+        },
+        "verbosity": {
+          "section": "TF_DEFINE",
+          "name": "verbosity",
+          "value": "-1",
+          "type": "int",
+          "description": "Logging verbosity level. Messages logged at this level or lower will be included. Set to 1 for debug logging. If the flag was not set or supplied, the value will be changed from the default of -1 (warning) to 0 (info) after flags are parsed."
+        },
+        "logger_levels": {
+          "section": "TF_DEFINE",
+          "name": "logger_levels",
+          "value": "{}",
+          "type": "string",
+          "description": "Specify log level of loggers. The format is a CSV list of `name:level`. Where `name` is the logger name used with `logging.getLogger()`, and `level` is a level name  (INFO, DEBUG, etc). e.g. `myapp.foo:INFO,other.logger:DEBUG`"
+        },
+        "stderrthreshold": {
+          "section": "TF_DEFINE",
+          "name": "stderrthreshold",
+          "value": "fatal",
+          "type": "string",
+          "description": "log messages at this level, or more severe, to stderr in addition to the logfile.  Possible values are 'debug', 'info', 'warning', 'error', and 'fatal'.  Obsoletes --alsologtostderr. Using --alsologtostderr cancels the effect of this flag. Please also note that this flag is subject to --verbosity and requires logfile not be stderr."
+        },
+        "showprefixforinfo": {
+          "section": "TF_DEFINE",
+          "name": "showprefixforinfo",
+          "value": "True",
+          "type": "bool",
+          "description": "If False, do not prepend prefix to info messages when it's logged to stderr, --verbosity is set to INFO level, and python logging is used."
+        },
+        "run_with_pdb": {
+          "section": "TF_DEFINE",
+          "name": "run_with_pdb",
+          "value": "False",
+          "type": "bool",
+          "description": "Set to true for PDB debug mode"
+        },
+        "pdb_post_mortem": {
+          "section": "TF_DEFINE",
+          "name": "pdb_post_mortem",
+          "value": "False",
+          "type": "bool",
+          "description": "Set to true to handle uncaught exceptions with PDB post mortem."
+        },
+        "pdb": {
+          "section": "TF_DEFINE",
+          "name": "pdb",
+          "value": "False",
+          "type": "bool",
+          "description": "Alias for --pdb_post_mortem."
+        },
+        "run_with_profiling": {
+          "section": "TF_DEFINE",
+          "name": "run_with_profiling",
+          "value": "False",
+          "type": "bool",
+          "description": "Set to true for profiling the script. Execution will be slower, and the output format might change over time."
+        },
+        "profile_file": {
+          "section": "TF_DEFINE",
+          "name": "profile_file",
+          "value": "",
+          "type": "string",
+          "description": "Dump profile information to a file (for python -m pstats). Implies --run_with_profiling."
+        },
+        "use_cprofile_for_profiling": {
+          "section": "TF_DEFINE",
+          "name": "use_cprofile_for_profiling",
+          "value": "True",
+          "type": "bool",
+          "description": "Use cProfile instead of the profile module for profiling. This has no effect unless --run_with_profiling is set."
+        },
+        "only_check_args": {
+          "section": "TF_DEFINE",
+          "name": "only_check_args",
+          "value": "False",
+          "type": "bool",
+          "description": "Set to true to validate args and exit."
+        },
+        "op_conversion_fallback_to_while_loop": {
+          "section": "TF_DEFINE",
+          "name": "op_conversion_fallback_to_while_loop",
+          "value": "True",
+          "type": "bool",
+          "description": "DEPRECATED: Flag is ignored."
+        },
+        "delta_threshold": {
+          "section": "TF_DEFINE",
+          "name": "delta_threshold",
+          "value": "0.5",
+          "type": "float",
+          "description": "Log if history based diff crosses this threshold."
+        },
+        "tt_check_filter": {
+          "section": "TF_DEFINE",
+          "name": "tt_check_filter",
+          "value": "False",
+          "type": "bool",
+          "description": "Terminate early to check op name filtering."
+        },
+        "tt_single_core_summaries": {
+          "section": "TF_DEFINE",
+          "name": "tt_single_core_summaries",
+          "value": "False",
+          "type": "bool",
+          "description": "Report single core metric and avoid aggregation."
+        },
+        "runtime_oom_exit": {
+          "section": "TF_DEFINE",
+          "name": "runtime_oom_exit",
+          "value": "True",
+          "type": "bool",
+          "description": "Exit the script when the TPU runtime is OOM."
+        },
+        "hbm_oom_exit": {
+          "section": "TF_DEFINE",
+          "name": "hbm_oom_exit",
+          "value": "True",
+          "type": "bool",
+          "description": "Exit the script when the TPU HBM is OOM."
+        },
+        "test_srcdir": {
+          "section": "TF_DEFINE",
+          "name": "test_srcdir",
+          "value": "",
+          "type": "string",
+          "description": "Root of directory tree where source files live"
+        },
+        "test_tmpdir": {
+          "section": "TF_DEFINE",
+          "name": "test_tmpdir",
+          "value": "/tmp/absl_testing",
+          "type": "string",
+          "description": "Directory for temporary testing files"
+        },
+        "test_random_seed": {
+          "section": "TF_DEFINE",
+          "name": "test_random_seed",
+          "value": "301",
+          "type": "int",
+          "description": "Random seed for testing. Some test frameworks may change the default value of this flag between runs, so it is not appropriate for seeding probabilistic tests."
+        },
+        "test_randomize_ordering_seed": {
+          "section": "TF_DEFINE",
+          "name": "test_randomize_ordering_seed",
+          "value": "",
+          "type": "string",
+          "description": "If positive, use this as a seed to randomize the execution order for test cases. If \"random\", pick a random seed to use. If 0 or not set, do not randomize test case execution order. This flag also overrides the TEST_RANDOMIZE_ORDERING_SEED environment variable."
+        },
+        "xml_output_file": {
+          "section": "TF_DEFINE",
+          "name": "xml_output_file",
+          "value": "",
+          "type": "string",
+          "description": "File to store XML test results"
+        }
+      }
+    },
+    "id": "6e49dff4026a4c74989bee249e5b1772",
+    "last_change": "2026-10-07T19:23:05.987000+00:00",
+    "last_iteration": 299999,
+    "last_update": "2026-10-07T19:23:05.987000+00:00",
+    "models": {
+      "input": [],
+      "output": [
+        {
+          "model": {
+            "id": "69fd324bec3c48aea124bfae668adfe7",
+            "created": "2026-10-07T10:51:45.773000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_0",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_0.pt"
+          },
+          "name": "model_0"
+        },
+        {
+          "model": {
+            "id": "1a7d75add28643b4ac689494774b228c",
+            "created": "2026-10-07T10:51:55.500000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_0",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_0.pt"
+          },
+          "name": "optim_0"
+        },
+        {
+          "model": {
+            "id": "db7312447ce241048ce298a5108174f3",
+            "created": "2026-10-07T10:52:05.179000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_0",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_0.pt"
+          },
+          "name": "scheduler_0"
+        },
+        {
+          "model": {
+            "id": "087247f5a02c4c0b925691d843085979",
+            "created": "2026-10-07T11:24:49.728000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_20000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_20000.pt"
+          },
+          "name": "model_20000"
+        },
+        {
+          "model": {
+            "id": "8ea2defe3faa43518ae35d5af257cc2c",
+            "created": "2026-10-07T11:24:59.404000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_20000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_20000.pt"
+          },
+          "name": "optim_20000"
+        },
+        {
+          "model": {
+            "id": "538c24010377414ebb6b3db96e430982",
+            "created": "2026-10-07T11:25:09.131000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_20000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_20000.pt"
+          },
+          "name": "scheduler_20000"
+        },
+        {
+          "model": {
+            "id": "0ea6ceb126144512808f9169b9187a09",
+            "created": "2026-10-07T11:57:52.673000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_40000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_40000.pt"
+          },
+          "name": "model_40000"
+        },
+        {
+          "model": {
+            "id": "95632d7bb0064463aeb119dd16a2715c",
+            "created": "2026-10-07T11:58:02.264000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_40000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_40000.pt"
+          },
+          "name": "optim_40000"
+        },
+        {
+          "model": {
+            "id": "bf798e205230439f8e2fdc8ce05d7e49",
+            "created": "2026-10-07T11:58:11.868000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_40000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_40000.pt"
+          },
+          "name": "scheduler_40000"
+        },
+        {
+          "model": {
+            "id": "00a8945e518c4914b7fe49f6f9608515",
+            "created": "2026-10-07T12:31:01.815000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_60000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_60000.pt"
+          },
+          "name": "model_60000"
+        },
+        {
+          "model": {
+            "id": "22897f95a3bb415ea35bf18bfd3c94b3",
+            "created": "2026-10-07T12:31:11.595000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_60000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_60000.pt"
+          },
+          "name": "optim_60000"
+        },
+        {
+          "model": {
+            "id": "e4e69a2c8b94458c913ab1c41d6dcc6e",
+            "created": "2026-10-07T12:31:21.292000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_60000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_60000.pt"
+          },
+          "name": "scheduler_60000"
+        },
+        {
+          "model": {
+            "id": "e92de613885b4836b869eadb44885278",
+            "created": "2026-10-07T13:04:16.931000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_80000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_80000.pt"
+          },
+          "name": "model_80000"
+        },
+        {
+          "model": {
+            "id": "a58914f678954274acc23f9231aac6e6",
+            "created": "2026-10-07T13:04:26.782000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_80000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_80000.pt"
+          },
+          "name": "optim_80000"
+        },
+        {
+          "model": {
+            "id": "04cb5cd61c8642a09e526278792310cc",
+            "created": "2026-10-07T13:04:36.428000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_80000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_80000.pt"
+          },
+          "name": "scheduler_80000"
+        },
+        {
+          "model": {
+            "id": "31844ce06ae0412da7c5a642597e9e24",
+            "created": "2026-10-07T13:37:38.374000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_100000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_100000.pt"
+          },
+          "name": "model_100000"
+        },
+        {
+          "model": {
+            "id": "e3ef4541196340ff9492ae2fd898dfed",
+            "created": "2026-10-07T13:37:48.038000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_100000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_100000.pt"
+          },
+          "name": "optim_100000"
+        },
+        {
+          "model": {
+            "id": "ed54792dcd1e4b1b8493f35f5e5585ec",
+            "created": "2026-10-07T13:37:57.631000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_100000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_100000.pt"
+          },
+          "name": "scheduler_100000"
+        },
+        {
+          "model": {
+            "id": "59a507a16d624d11821a6e42dd53889f",
+            "created": "2026-10-07T14:11:07.647000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_120000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_120000.pt"
+          },
+          "name": "model_120000"
+        },
+        {
+          "model": {
+            "id": "8f84e67ece884c8ebb01af7038c5c841",
+            "created": "2026-10-07T14:11:17.395000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_120000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_120000.pt"
+          },
+          "name": "optim_120000"
+        },
+        {
+          "model": {
+            "id": "0a497be8e9f740cc8c6cd6fe1f327c86",
+            "created": "2026-10-07T14:11:27.149000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_120000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_120000.pt"
+          },
+          "name": "scheduler_120000"
+        },
+        {
+          "model": {
+            "id": "06fb688e74614a3abfcd95b6028f55fa",
+            "created": "2026-10-07T14:44:42.944000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_140000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_140000.pt"
+          },
+          "name": "model_140000"
+        },
+        {
+          "model": {
+            "id": "55c7e8123ad248d88002d5275b7a4f77",
+            "created": "2026-10-07T14:44:52.600000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_140000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_140000.pt"
+          },
+          "name": "optim_140000"
+        },
+        {
+          "model": {
+            "id": "eb657d55dc884d97a265e96e29447316",
+            "created": "2026-10-07T14:45:06.276000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_140000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_140000.pt"
+          },
+          "name": "scheduler_140000"
+        },
+        {
+          "model": {
+            "id": "574d2aedf5e44ad1a418a5ea12d2d8c4",
+            "created": "2026-10-07T15:18:31.280000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_160000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_160000.pt"
+          },
+          "name": "model_160000"
+        },
+        {
+          "model": {
+            "id": "325d1a710187476ca52394edf16a2d1a",
+            "created": "2026-10-07T15:18:50.320000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_160000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_160000.pt"
+          },
+          "name": "optim_160000"
+        },
+        {
+          "model": {
+            "id": "f621d8614fac4957abfb0bd1a49f0f0d",
+            "created": "2026-10-07T15:19:00.039000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_160000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_160000.pt"
+          },
+          "name": "scheduler_160000"
+        },
+        {
+          "model": {
+            "id": "33bb8af5d32d4907864cf8ab5d144a82",
+            "created": "2026-10-07T15:52:45.375000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_180000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_180000.pt"
+          },
+          "name": "model_180000"
+        },
+        {
+          "model": {
+            "id": "40ad1c48b64342379e04c6f7dba50f14",
+            "created": "2026-10-07T15:52:59.522000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_180000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_180000.pt"
+          },
+          "name": "optim_180000"
+        },
+        {
+          "model": {
+            "id": "51ecc160eae14b199cdd46a188e60ea1",
+            "created": "2026-10-07T15:53:14.036000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_180000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_180000.pt"
+          },
+          "name": "scheduler_180000"
+        },
+        {
+          "model": {
+            "id": "dd734949139447f3a7076d02fba211aa",
+            "created": "2026-10-07T16:27:08.648000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_200000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_200000.pt"
+          },
+          "name": "model_200000"
+        },
+        {
+          "model": {
+            "id": "a969ac5fd6864cbeab7ae3d505efaaea",
+            "created": "2026-10-07T16:27:36.080000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_200000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_200000.pt"
+          },
+          "name": "optim_200000"
+        },
+        {
+          "model": {
+            "id": "8d9fad67ae7c46f9800caa8b0d0d9bff",
+            "created": "2026-10-07T16:27:56.168000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_200000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_200000.pt"
+          },
+          "name": "scheduler_200000"
+        },
+        {
+          "model": {
+            "id": "fe280c30d06a449daa5ec6247eb4437e",
+            "created": "2026-10-07T17:01:44.443000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_220000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_220000.pt"
+          },
+          "name": "model_220000"
+        },
+        {
+          "model": {
+            "id": "d9d44323a6084bcda4d2ed8d4d9a0b9c",
+            "created": "2026-10-07T17:02:02.176000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_220000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_220000.pt"
+          },
+          "name": "optim_220000"
+        },
+        {
+          "model": {
+            "id": "42319ea94e6a4f129a9c72b6e777e46e",
+            "created": "2026-10-07T17:02:14.240000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_220000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_220000.pt"
+          },
+          "name": "scheduler_220000"
+        },
+        {
+          "model": {
+            "id": "060eac77519b4e9dbb9d9f8ae32db188",
+            "created": "2026-10-07T17:36:09.001000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_240000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_240000.pt"
+          },
+          "name": "model_240000"
+        },
+        {
+          "model": {
+            "id": "08ee79d238284faaa85eb9ab409676b9",
+            "created": "2026-10-07T17:36:22.056000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_240000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_240000.pt"
+          },
+          "name": "optim_240000"
+        },
+        {
+          "model": {
+            "id": "6f43bc7686a840a1a6727a454d4cd0f1",
+            "created": "2026-10-07T17:36:38.981000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_240000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_240000.pt"
+          },
+          "name": "scheduler_240000"
+        },
+        {
+          "model": {
+            "id": "ef7c727647c14ad3858a7d088cb3a0ef",
+            "created": "2026-10-07T18:10:32.484000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_260000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_260000.pt"
+          },
+          "name": "model_260000"
+        },
+        {
+          "model": {
+            "id": "68a8538d043341968f417e3adfb3f4f1",
+            "created": "2026-10-07T18:10:42.270000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_260000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_260000.pt"
+          },
+          "name": "optim_260000"
+        },
+        {
+          "model": {
+            "id": "ae3486c4c54040e2bc6903b970c6f51f",
+            "created": "2026-10-07T18:10:52.225000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_260000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_260000.pt"
+          },
+          "name": "scheduler_260000"
+        },
+        {
+          "model": {
+            "id": "3ed7e67b6ae0437c9ec3a5c0d3613695",
+            "created": "2026-10-07T18:44:48.180000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_280000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_280000.pt"
+          },
+          "name": "model_280000"
+        },
+        {
+          "model": {
+            "id": "be92ef16ae704e51a747b898d25ef568",
+            "created": "2026-10-07T18:44:57.855000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_280000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_280000.pt"
+          },
+          "name": "optim_280000"
+        },
+        {
+          "model": {
+            "id": "d3631f200f2e4ba793074ad82719c135",
+            "created": "2026-10-07T18:45:07.639000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_280000",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_280000.pt"
+          },
+          "name": "scheduler_280000"
+        },
+        {
+          "model": {
+            "id": "52985558be0c461cb9ad7430547b6209",
+            "created": "2026-10-07T19:19:10.052000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - model_299999",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/model_299999.pt"
+          },
+          "name": "model_299999"
+        },
+        {
+          "model": {
+            "id": "5be2ef22f5744b9eaba121a89ea9e1ac",
+            "created": "2026-10-07T19:19:19.919000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - optim_299999",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/optim_299999.pt"
+          },
+          "name": "optim_299999"
+        },
+        {
+          "model": {
+            "id": "2b9659322b124003a79707ff4ef9a8c3",
+            "created": "2026-10-07T19:19:29.654000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - scheduler_299999",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/scheduler_299999.pt"
+          },
+          "name": "scheduler_299999"
+        },
+        {
+          "model": {
+            "id": "ab161552044d41a9bedd1a68326809de",
+            "created": "2026-10-07T19:21:20.332000+00:00",
+            "design": {
+              "design": ""
+            },
+            "framework": "PyTorch",
+            "name": "InC - MODEL_last",
+            "uri": "file:///kaggle/working/ad-icrl-main/saved_data/saved_models/darkroom_07-Oct-10-51-14/MODEL_last.pt"
+          },
+          "name": "MODEL_last"
+        }
+      ]
+    },
+    "name": "InC",
+    "project": {
+      "id": "007c59b9dffd4616a5203a16ecd9d855",
+      "name": "New_dark_room"
+    },
+    "runtime": {
+      "CLEARML VERSION": "clearml-2.1.12",
+      "CLI": "/kaggle/working/ad-icrl-main/src/dt/train.py",
+      "progress": "100",
+      "platform": "linux",
+      "python_version": "3.12.13",
+      "python_exec": "/usr/bin/python3",
+      "OS": "Linux-6.18.48+-x86_64-with-glibc2.35",
+      "processor": "x86_64",
+      "cpu_cores": 4,
+      "memory_gb": 31.3,
+      "hostname": "ea9e4dcc1d1e",
+      "gpu_count": 2,
+      "gpu_type": "Tesla T4, Tesla T4",
+      "gpu_memory": "15GB, 15GB",
+      "gpu_driver_version": "580.178.04",
+      "gpu_driver_cuda_version": "13.0"
+    },
+    "script": {
+      "binary": "python3.12",
+      "branch": "main",
+      "diff": "",
+      "entry_point": "src/dt/train.py",
+      "repository": "https://github.com/Treften/ad-icrl-main.git",
+      "requirements": {
+        "pip": "# Python 3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]\n\nboto3 == 1.43.36\nclearml == 2.1.12\ngoogle_cloud_storage == 3.10.1\ngymnasium == 1.2.0\nmatplotlib == 3.10.0\nnumpy == 2.0.2\npyyaml == 6.0.3\nstable_baselines3 == 2.9.0\ntensorboard == 2.20.0\ntorch == 2.10.0+cu128\ntoymeta == 0.0.1\ntqdm == 4.67.3\ntyro == 1.0.16\nwandb == 0.26.1\n",
+        "conda": ""
+      },
+      "version_num": "f0b580d1a8446e51ca57c88186a3955da1dd29c9",
+      "working_dir": "."
+    },
+    "started": "2026-10-07T10:51:20.500000+00:00",
+    "status": "completed",
+    "status_changed": "2026-10-07T19:23:05.987000+00:00",
+    "status_message": "",
+    "status_reason": "completed",
+    "system_tags": [
+      "development"
+    ],
+    "tags": [
+      "128  300000",
+      "dark_room"
+    ],
+    "type": "training",
+    "user": {
+      "id": "7832567f066645cdb19f3b4e8d1a8efa",
+      "name": "Владислав Мамонтов"
+    }
+  }
+}

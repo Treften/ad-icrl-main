@@ -14,6 +14,7 @@ import torch.optim as optim
 import tyro
 from torch.distributions.categorical import Categorical
 from torch.utils.tensorboard import SummaryWriter
+from gymnasium.vector import SyncVectorEnv
 
 
 from src.data.env import SetupDarkRoom
@@ -37,7 +38,7 @@ class PPOConfig:
     """the entity (team) of wandb's project"""
     capture_video: bool = False
     """whether to capture videos of the agent performances (check out `videos` folder)"""
-
+    autoreset_mode=AutoresetMode.SAME_STEP
     # Algorithm specific arguments
     total_timesteps: int = 500000
     """total timesteps of the experiments"""

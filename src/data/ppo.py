@@ -38,7 +38,6 @@ class PPOConfig:
     """the entity (team) of wandb's project"""
     capture_video: bool = False
     """whether to capture videos of the agent performances (check out `videos` folder)"""
-    autoreset_mode=AutoresetMode.SAME_STEP
     # Algorithm specific arguments
     total_timesteps: int = 500000
     """total timesteps of the experiments"""
@@ -204,7 +203,10 @@ def train(args: PPOConfig):
     device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
 
     # env setup
-    envs = gym.vector.SyncVectorEnv(args.env.init_n_envs(args.num_envs, args.seed))
+    envs = SyncVectorEnv(
+        args.env.init_n_envs(args.num_envs, args.seed),
+        autoreset_mode=gym.vector.AutoresetMode.SAME_STEP,
+    )
     # envs = gym.vector.SyncVectorEnv(
     #     [make_env(args.env_id, i, args.capture_video, run_name) for i in range(args.num_envs)],
     # )

@@ -5,7 +5,7 @@ from tqdm import tqdm
 
 import numpy as np
 import torch
-from gymnasium.vector import SyncVectorEnv
+from gymnasium.vector import AutoresetMode, SyncVectorEnv
 
 from src.data.env import SetupDarkRoom
 from src.dt.model import DecisionTransformer
@@ -19,10 +19,15 @@ def evaluate_in_context(env_config: SetupDarkRoom,
                         seed: int | None = None,
                         mode: Literal["mode", "sample"] = "mode"):
     vec_env = SyncVectorEnv(
-        [lambda goal_idx=goal_idx: env_config.get_cls()(goal_index=goal_idx,
-                                              enable_monitor_logs=False,
-                                              autoreset_mode=AutoresetMode.SAME_STEP).init_env()
-        for goal_idx in goal_idxs])
+        [
+            lambda goal_idx=goal_idx: env_config.get_cls()(
+                goal_index=goal_idx,
+                enable_monitor_logs=False,
+            ).init_env()
+            for goal_idx in goal_idxs
+        ],
+        autoreset_mode=AutoresetMode.SAME_STEP,
+    )
 
     states = torch.zeros(
         (model.seq_len, vec_env.num_envs), dtype=torch.long, device=device

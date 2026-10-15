@@ -176,6 +176,7 @@ def train(config: TrainConfig):
     for step in trange(config.num_updates, desc="Training"):
         batch = next(dataloader_iter)
         states, actions, rewards = [b.to(device) for b in batch]
+        optim.zero_grad(set_to_none=True)
         
         with torch.autocast(device_type="cuda", dtype=torch.float16):
             predicted_actions, predicted_rewards = model(

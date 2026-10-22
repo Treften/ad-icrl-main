@@ -186,7 +186,7 @@ def train(args: PPOConfig):
     )
     os.makedirs(checkpoint_dir, exist_ok=True)
     logger = task.get_logger() 
-    if args.track:
+    '''if args.track:
         import wandb
 
         wandb.init(
@@ -197,7 +197,7 @@ def train(args: PPOConfig):
             name=run_name,
             monitor_gym=True,
             save_code=True,
-        )
+        )'''
     writer = SummaryWriter(f"runs/{run_name}")
     writer.add_text(
         "hyperparameters",

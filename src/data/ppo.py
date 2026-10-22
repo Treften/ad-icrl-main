@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 from dataclasses import dataclass, asdict
 import yaml
+from clearml import Task, Logger
 
 import gymnasium as gym
 import numpy as np
@@ -175,7 +176,16 @@ def train(args: PPOConfig):
     args.minibatch_size = int(args.batch_size // args.num_minibatches)
     args.num_iterations = args.total_timesteps // args.batch_size
     run_name = f"{args.env.experiment_name}__seed={args.seed}"
-
+    task = Task.init(
+            project_name='New_dark_room', 
+            task_name='InC', 
+            tags=['dark_room'])
+    os.makedirs("saved_data/checkpoints", exist_ok=True)
+    checkpoint_dir = os.path.join(
+        "saved_data/checkpoints", task.id
+    )
+    os.makedirs(checkpoint_dir, exist_ok=True)
+    logger = task.get_logger() 
     if args.track:
         import wandb
 
@@ -349,7 +359,13 @@ def train(args: PPOConfig):
         y_pred, y_true = b_values.cpu().numpy(), b_returns.cpu().numpy()
         var_y = np.var(y_true)
         explained_var = np.nan if var_y == 0 else 1 - np.var(y_true - y_pred) / var_y
-
+        if iteration % 20000:
+            logger.report_scalar(
+                title="Progress",
+                series="percent",
+                value=100.0 * iteration / args.num_iterations,
+                iteration=step,
+            )
         # TRY NOT TO MODIFY: record rewards for plotting purposes
         writer.add_scalar("charts/learning_rate", optimizer.param_groups[0]["lr"], global_step)
         writer.add_scalar("losses/value_loss", v_loss.item(), global_step)
@@ -365,6 +381,18 @@ def train(args: PPOConfig):
     envs.close()
     writer.close()
     lh_log.close()
+    history_path = os.path.join(
+        "saved_data",
+        "learning_history",
+        "ppo",
+        args.env.experiment_name + ".npz",
+    )
+    if os.path.exists(history_path):
+        task.upload_artifact(
+            name="learning_history",
+            artifact_object=history_path,
+        )
+
     
 if __name__ == "__main__":
     args = tyro.cli(PPOConfig)

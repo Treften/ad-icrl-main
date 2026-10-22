@@ -372,7 +372,7 @@ def train(args: PPOConfig):
         y_pred, y_true = b_values.cpu().numpy(), b_returns.cpu().numpy()
         var_y = np.var(y_true)
         explained_var = np.nan if var_y == 0 else 1 - np.var(y_true - y_pred) / var_y
-        if iteration % 20000 == 0:
+        if iteration % 19998 == 0:
             logger.report_scalar(
                 title="Progress",
                 series="percent",

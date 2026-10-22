@@ -24,7 +24,7 @@ __pycache__/
 build/
 develop-eggs/
 dist/
-downloads/
+downloads/learning_history
 eggs/
 .eggs/
 lib/
@@ -33,6 +33,7 @@ parts/
 sdist/
 var/
 wheels/
+saved_data/
 share/python-wheels/
 *.egg-info/
 .installed.cfg

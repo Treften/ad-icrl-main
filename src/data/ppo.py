@@ -397,16 +397,17 @@ def train(args: PPOConfig):
     envs.close()
     writer.close()
     lh_log.close()
-    history_path = os.path.join(
+    history_dir = os.path.join(
         "saved_data",
         "learning_history",
         "ppo",
-        args.env.experiment_name + ".npz",
     )
-    if os.path.exists(history_path):
+
+    if os.path.isdir(history_dir):
         task.upload_artifact(
             name="learning_history",
-            artifact_object=history_path,
+            artifact_object=history_dir,
+            wait_on_upload=True,
         )
 
     

@@ -402,7 +402,12 @@ def train(args: PPOConfig):
         "learning_history",
         "ppo",
     )
-
+    logger.report_scalar(
+                    title="Progress",
+                    series="task",
+                    value=args.env.goal_index,
+                    iteration=step,
+                )
     if os.path.isdir(history_dir):
         task.upload_artifact(
             name="learning_history",

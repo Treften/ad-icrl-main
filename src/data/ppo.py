@@ -406,7 +406,7 @@ def train(args: PPOConfig):
                     title="Progress",
                     series="task",
                     value=args.env.goal_index,
-                    iteration=step,
+                    iteration=args.env.goal_index,
                 )
     if os.path.isdir(history_dir):
         task.upload_artifact(

@@ -271,12 +271,25 @@ def train(args: PPOConfig):
             rewards[step] = torch.tensor(reward).to(device).view(-1)
             next_obs, next_done = torch.Tensor(next_obs).to(device), torch.Tensor(next_done).to(device)
 
+
             if "final_info" in infos:
-                for info in infos["final_info"]:
-                    if info and "episode" in info:
-                        print(f"global_step={global_step}, episodic_return={info['episode']['r']}")
-                        writer.add_scalar("charts/episodic_return", info["episode"]["r"], global_step)
-                        writer.add_scalar("charts/episodic_length", info["episode"]["l"], global_step)
+                final_infos = infos["final_info"]
+                final_info_mask = infos.get("_final_info", np.ones(args.num_envs, dtype=bool))
+
+                for i, info in enumerate(final_infos):
+                    if not final_info_mask[i] or not isinstance(info, dict):
+                        continue
+
+                    episode = info.get("episode")
+                    if episode is not None:
+                        episodic_return = episode["r"]
+                        episodic_length = episode["l"]
+
+                        print(
+                            f"global_step={global_step}, "
+                            f"episodic_return={episodic_return}"
+                        )
+
 
         # bootstrap value if not done
         with torch.no_grad():

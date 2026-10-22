@@ -179,10 +179,9 @@ def train(args: PPOConfig):
     task = Task.init(
             project_name='New_dark_room', 
             task_name='ppo',
-
-            tags=['dark_room'])
-    task_id="a1004bffbdb94d16b684dbd69755203f",
-    reuse_last_task_id=False,
+            tags=['dark_room'],
+            task_id="a1004bffbdb94d16b684dbd69755203f",
+            reuse_last_task_id=False)
     os.makedirs("saved_data/checkpoints", exist_ok=True)
     checkpoint_dir = os.path.join(
         "saved_data/checkpoints", task.id

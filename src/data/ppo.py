@@ -24,7 +24,7 @@ from src.data.env import SetupDarkRoom
 class PPOConfig:
     env: SetupDarkRoom
     """env config"""
-
+    id: int = 1
     seed: int = 1
     """seed of the experiment"""
     torch_deterministic: bool = True
@@ -180,7 +180,7 @@ def train(args: PPOConfig):
             project_name='New_dark_room', 
             task_name='ppo',
             tags=['dark_room'],
-            task_id="a1004bffbdb94d16b684dbd69755203f",
+            continue_last_task="a1004bffbdb94d16b684dbd69755203f",
             reuse_last_task_id=False)
     os.makedirs("saved_data/checkpoints", exist_ok=True)
     checkpoint_dir = os.path.join(

@@ -53,7 +53,7 @@ class TrainConfig:
 
     # ---- dataset params ----
     permutations_file: str = 'saved_data/permutations_9.txt'  # File with permutations of goal indices
-    train_test_split: float = 0.5  # Percentage of data to be used for testing
+    train_test_split: float = 0.2  # Percentage of data to be used for testing
     filter_episodes: int = 1  # Number of episodes to filter from the dataset
     learning_history_dirs: str | List[str] = field(default_factory=LEARNING_HISTORY_DIRS.copy)  # Directories to load learning histories from
 

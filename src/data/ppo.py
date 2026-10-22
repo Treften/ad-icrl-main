@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 from dataclasses import dataclass, asdict
 import yaml
+from clearml import Task, Logger
 
 import gymnasium as gym
 import numpy as np
@@ -175,13 +176,19 @@ def train(args: PPOConfig):
     args.minibatch_size = int(args.batch_size // args.num_minibatches)
     args.num_iterations = args.total_timesteps // args.batch_size
     run_name = f"{args.env.experiment_name}__seed={args.seed}"
+    task = Task.init(
+            project_name='New_dark_room', 
+            task_name='ppo',
 
-    '''os.makedirs("saved_data/checkpoints", exist_ok=True)
+            tags=['dark_room'])
+    task_id="a1004bffbdb94d16b684dbd69755203f",
+    reuse_last_task_id=False,
+    os.makedirs("saved_data/checkpoints", exist_ok=True)
     checkpoint_dir = os.path.join(
         "saved_data/checkpoints", task.id
     )
     os.makedirs(checkpoint_dir, exist_ok=True)
-    logger = task.get_logger()''' 
+    logger = task.get_logger()
     '''if args.track:
         import wandb
 
@@ -397,11 +404,11 @@ def train(args: PPOConfig):
         "ppo",
         args.env.experiment_name + ".npz",
     )
-    '''if os.path.exists(history_path):
+    if os.path.exists(history_path):
         task.upload_artifact(
             name="learning_history",
             artifact_object=history_path,
-        )'''
+        )
 
     
 if __name__ == "__main__":

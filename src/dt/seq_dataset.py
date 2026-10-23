@@ -83,7 +83,7 @@ class OneGoalSequenceDataset(IterableDataset):
         ) -> None:
         self.dataset, info = load_learning_history(
             goal_idx, exp_name, learning_history_dirs, max_episodes, filter_episodes, episode_length)
-        
+        print(info["num_episodes"])
         self.seq_len = seq_len
 
         self.actor = actor

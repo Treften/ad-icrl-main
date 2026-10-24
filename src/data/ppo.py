@@ -234,8 +234,10 @@ def train(args: PPOConfig):
     rewards = torch.zeros((args.num_steps, args.num_envs)).to(device)
     dones = torch.zeros((args.num_steps, args.num_envs)).to(device)
     values = torch.zeros((args.num_steps, args.num_envs)).to(device)
-
-    lh_log = LearningHistoryLogger(args.env.experiment_name)
+    history_name = (
+    f"run-{args.id:04d}-goal={args.env.goal_index}"
+    )
+    lh_log = LearningHistoryLogger(history_name)
 
     # TRY NOT TO MODIFY: start the game
     global_step = 0

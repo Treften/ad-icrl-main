@@ -1,7 +1,7 @@
 #!/bin/bash
 export PYTHONPATH=.
 
-for i in {0..1999}; do
+for i in {532..1999}; do
     python3 src/data/ppo.py \
         --id "$i" \
         --seed "$i" \

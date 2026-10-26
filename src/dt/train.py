@@ -38,7 +38,10 @@ def get_goal_idxs(permutations_file: str = 'saved_data/permutations_9.txt',
     return train_idxs, test_idxs
 
 LEARNING_HISTORY_DIRS = [
-    "/kaggle/input/datasets/desfr1t/dark-room-ppo/ppo/saved_data/learning_history/"
+    "/kaggle/input/datasets/desfr1t/dark-room-ppo/ppo",
+    "/kaggle/input/datasets/desfr1t/dark-room-ppo/ppo(1)", 
+    "/kaggle/input/datasets/desfr1t/dark-room-ppo/ppo(2)"
+
     ]
 
 @dataclass

@@ -412,7 +412,7 @@ def train(args: PPOConfig):
                 )
     if os.path.isdir(history_dir):
         task.upload_artifact(
-            name="learning_history3",
+            name="learning_history4",
             artifact_object=history_dir,
             wait_on_upload=True,
         )

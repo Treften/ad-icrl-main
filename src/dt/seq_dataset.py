@@ -1,7 +1,7 @@
 import os
 import random
 from typing import Any, Dict, List, Tuple, Literal
-
+import re
 import numpy as np
 from torch.utils.data import IterableDataset
     
@@ -34,10 +34,32 @@ def load_learning_history(
         learning_history_dirs = [learning_history_dirs]
 
     # Search for files with learning histories for the specified goals    
-    filepaths = [os.path.join(learning_history_dir, x) for learning_history_dir in learning_history_dirs \
-        for x in os.listdir(learning_history_dir) if f"{exp_name}-goal={goal_idx:02d}" in x]
-    assert len(filepaths) == len(learning_history_dirs), f"The input directories ({learning_history_dirs}) "\
-        f"contain more than 1 history or no histories ({filepaths}). Check the data in input directories."
+    filepaths = []
+
+    for learning_history_dir in learning_history_dirs:
+        for filename in sorted(os.listdir(learning_history_dir)):
+            if not filename.endswith(".npz"):
+                continue
+
+            match = re.search(
+                r"(?:^|[-_])goal=0*(\d+)(?=_|\.npz$)",
+                filename,
+            )
+
+            if match and int(match.group(1)) == goal_idx:
+                filepaths.append(
+                    os.path.join(learning_history_dir, filename)
+                )
+
+    if not filepaths:
+        raise FileNotFoundError(
+            f"No histories found for goal_idx={goal_idx} "
+            f"in directories: {learning_history_dirs}"
+        )
+
+    print(
+        f"Goal {goal_idx}: found {len(filepaths)} histories"
+    )
 
     # Read and concatenate the files    
     cols = ["observations", "actions", "rewards"]

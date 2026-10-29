@@ -33,7 +33,6 @@ parts/
 sdist/
 var/
 wheels/
-saved_data/
 share/python-wheels/
 *.egg-info/
 .installed.cfg

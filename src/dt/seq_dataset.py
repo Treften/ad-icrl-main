@@ -150,6 +150,7 @@ class SequenceDataset(IterableDataset):
                 goal_idx, exp_name, learning_history_dirs, seq_len, actor,
                 max_episodes, filter_episodes, episode_length)
             for goal_idx in goal_idxs}
+        print("data:")
         print(len(self.data))
 
     def __iter__(self):

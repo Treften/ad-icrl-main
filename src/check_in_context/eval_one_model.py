@@ -10,7 +10,7 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-
+from collections import defaultdict
 from src.dt.train import TrainConfig, get_goal_idxs
 from src.data.env import SetupDarkRoom
 from src.dt.utils import set_seed
@@ -95,7 +95,7 @@ class Evaluator:
             ln_placem=self.config.ln_placem,
             add_reward_head=self.config.add_reward_head,
         ).to(device)
-        
+        dbg=0
         for n_steps, model_path in reversed(self.model_paths.items()):
     
             model.load_state_dict(torch.load(model_path, map_location=device))
@@ -111,13 +111,15 @@ class Evaluator:
                 _eval_info_test, _ = evaluate_in_context(self.config.env_config, model, test_goal_idxs, 
                                                          eval_episodes, device, seed + n_repeat, mode)
 
-                # # for debug:
-                # _eval_info_train = defaultdict(list)
-                # _eval_info_test = defaultdict(list)
-                # for key in train_goal_idxs:
-                #     _eval_info_train[key] = ((np.random.rand(eval_episodes) * 10).astype(int) + np.arange(eval_episodes)).tolist()
-                # for key in test_goal_idxs:
-                #     _eval_info_test[key] = ((np.random.rand(eval_episodes) * 10).astype(int) + np.arange(eval_episodes)).tolist()
+                # for debug:
+                if dbg < 20:
+                    _eval_info_train = defaultdict(list)
+                    _eval_info_test = defaultdict(list)
+                    for key in train_goal_idxs:
+                        _eval_info_train[key] = ((np.random.rand(eval_episodes) * 10).astype(int) + np.arange(eval_episodes)).tolist()
+                    for key in test_goal_idxs:
+                        _eval_info_test[key] = ((np.random.rand(eval_episodes) * 10).astype(int) + np.arange(eval_episodes)).tolist()
+                    dbg+=1
             
                 eval_info_train.append(_eval_info_train)
                 eval_info_test.append(_eval_info_test)

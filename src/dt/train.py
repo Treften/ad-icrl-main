@@ -287,35 +287,29 @@ def train(config: TrainConfig):
             if config.checkpoints_path is not None:
                 torch.save(
                     model.state_dict(),
-                    os.path.join(
-                        config.checkpoints_path, f"model_{step}.pt"
-                    ),
+                    os.path.join(config.checkpoints_path, f"model_{step}.pt"),
                 )
                 torch.save(
                     optim.state_dict(),
-                    os.path.join(
-                        config.checkpoints_path, f"optim_{step}.pt"
-                    ),
+                    os.path.join(config.checkpoints_path, f"optim_{step}.pt"),
                 )
                 torch.save(
                     scheduler.state_dict(),
-                    os.path.join(
-                        config.checkpoints_path, f"scheduler_{step}.pt"
-                    ),
+                    os.path.join(config.checkpoints_path, f"scheduler_{step}.pt"),
                 )
                 task.upload_artifact(
                     name=f"model_{step}",
-                    artifact_object=config.checkpoints_path,
+                    artifact_object=os.path.join(config.checkpoints_path, f"model_{step}.pt"),
                 )
 
                 task.upload_artifact(
                     name=f"optim_{step}",
-                    artifact_object=config.checkpoints_path,
+                    artifact_object=os.path.join(config.checkpoints_path, f"optim_{step}.pt"),
                 )
 
                 task.upload_artifact(
                     name=f"scheduler_{step}",
-                    artifact_object=config.checkpoints_path,
+                    artifact_object=os.path.join(config.checkpoints_path, f"scheduler_{step}.pt"),
                 )
                 
     if config.checkpoints_path is not None:

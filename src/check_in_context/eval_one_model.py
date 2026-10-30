@@ -112,14 +112,14 @@ class Evaluator:
                                                          eval_episodes, device, seed + n_repeat, mode)
 
                 # for debug:
-                if dbg < 20:
-                    _eval_info_train = defaultdict(list)
-                    _eval_info_test = defaultdict(list)
-                    for key in train_goal_idxs:
-                        _eval_info_train[key] = ((np.random.rand(eval_episodes) * 10).astype(int) + np.arange(eval_episodes)).tolist()
-                    for key in test_goal_idxs:
-                        _eval_info_test[key] = ((np.random.rand(eval_episodes) * 10).astype(int) + np.arange(eval_episodes)).tolist()
-                    dbg+=1
+                # if dbg < 20:
+                #     _eval_info_train = defaultdict(list)
+                #     _eval_info_test = defaultdict(list)
+                #     for key in train_goal_idxs:
+                #         _eval_info_train[key] = ((np.random.rand(eval_episodes) * 10).astype(int) + np.arange(eval_episodes)).tolist()
+                #     for key in test_goal_idxs:
+                #         _eval_info_test[key] = ((np.random.rand(eval_episodes) * 10).astype(int) + np.arange(eval_episodes)).tolist()
+                #     dbg+=1
             
                 eval_info_train.append(_eval_info_train)
                 eval_info_test.append(_eval_info_test)

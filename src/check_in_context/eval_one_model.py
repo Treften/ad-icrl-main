@@ -113,6 +113,14 @@ class Evaluator:
                 if n_repeat == 0:
                     debug_info_test = _debug_info_test
                     debug_info_train = _debug_info_train
+                    print("\n=== TRAIN DEBUG INFO ===")
+                    for key, value in debug_info_train.items():
+                        print(f"\n{key}:")
+                        print(value)
+                    print("\n=== TEST DEBUG INFO ===")
+                    for key, value in debug_info_test.items():
+                        print(f"\n{key}:")
+                        print(value)
                 # for debug:
                 # if dbg < 20:
                 #     _eval_info_train = defaultdict(list)
@@ -125,14 +133,7 @@ class Evaluator:
             
                 eval_info_train.append(_eval_info_train)
                 eval_info_test.append(_eval_info_test)
-            print("\n=== TRAIN DEBUG INFO ===")
-            for key, value in debug_info_train.items():
-                print(f"\n{key}:")
-                print(value)
-            print("\n=== TEST DEBUG INFO ===")
-            for key, value in debug_info_test.items():
-                print(f"\n{key}:")
-                print(value)
+
             eval_info_train = np.vstack([np.mean( [x[key] for x in eval_info_train], axis=0) \
                 for key in eval_info_train[0].keys()])
             

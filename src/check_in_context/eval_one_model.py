@@ -17,6 +17,68 @@ from src.dt.utils import set_seed
 from src.dt.eval import evaluate_in_context
 from src.dt.model import DecisionTransformer
 
+def print_debug_episodes(debug_info, n_episodes=5, grid_size=9):
+        states = torch.as_tensor(debug_info["states"]).cpu().numpy()
+        actions = torch.as_tensor(debug_info["actions"]).cpu().numpy()
+        rewards = torch.as_tensor(debug_info["rewards"]).cpu().numpy()
+        goals = debug_info["goal_idxs"]
+
+        action_names = {
+            0: "LEFT",
+            1: "RIGHT",
+            2: "UP",
+            3: "DOWN",
+            4: "NOOP"
+        }
+
+        n_episodes = min(n_episodes, len(states))
+
+        for i in range(n_episodes):
+            print(f"\n{'=' * 65}")
+            print(f"EPISODE {i + 1} | Goal: {goals[i]}")
+            print(f"{'=' * 65}")
+
+            episode = []
+            total_reward = 0
+
+            for step, (state, action, reward) in enumerate(
+                zip(states[i], actions[i], rewards[i])
+            ):
+                x = int(state % grid_size)
+                y = int(state // grid_size)
+                reward = float(reward)
+
+                episode.append({
+                    "step": step,
+                    "x": x,
+                    "y": y,
+                    "action": action_names.get(int(action), str(action)),
+                    "reward": reward,
+                    "state": int(state)
+                })
+
+                total_reward += reward
+
+                # Не показываем padding после завершения эпизода
+                if reward > 0:
+                    break
+
+            print(
+                f"{'STEP':<6}{'X':<6}{'Y':<6}"
+                f"{'ACTION':<12}{'REWARD':<10}{'STATE':<8}"
+            )
+
+            for row in episode:
+                print(
+                    f"{row['step']:<6}"
+                    f"{row['x']:<6}"
+                    f"{row['y']:<6}"
+                    f"{row['action']:<12}"
+                    f"{row['reward']:<10.3f}"
+                    f"{row['state']:<8}"
+                )
+
+            print(f"\nTotal reward: {total_reward:.3f}")
 @dataclass
 class EvalConfig:
     # --- init ---
@@ -31,6 +93,7 @@ class EvalConfig:
     mode: Literal["mode", "sample"] = "mode"  # use argmax over model outputs or sample
 
 class Evaluator:
+    
     def __init__(self, model_dir: str, out_dir: str | None = None):
         self.model_dir = model_dir
         self.out_dir = os.path.join(self.model_dir if out_dir is None else out_dir, "eval_plots")
@@ -113,14 +176,8 @@ class Evaluator:
                 if n_repeat == 0:
                     debug_info_test = _debug_info_test
                     debug_info_train = _debug_info_train
-                    print("\n=== TRAIN DEBUG INFO ===")
-                    for key, value in debug_info_train.items():
-                        print(f"\n{key}:")
-                        print(value)
-                    print("\n=== TEST DEBUG INFO ===")
-                    for key, value in debug_info_test.items():
-                        print(f"\n{key}:")
-                        print(value)
+                    print_debug_episodes(debug_info_test, n_episodes=10)
+                    print_debug_episodes(debug_info_train, n_episodes=10)
                 # for debug:
                 # if dbg < 20:
                 #     _eval_info_train = defaultdict(list)

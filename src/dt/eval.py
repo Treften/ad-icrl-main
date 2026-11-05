@@ -91,6 +91,6 @@ def evaluate_in_context(env_config: SetupDarkRoom,
         if np.all(num_episodes > eval_episodes):
             break
 
-    debug_info = {"states": states, "actions": actions, "goal_idxs": goal_idxs}
+    debug_info = {"states": states, "actions": actions, "rewards": rewards, "goal_idxs": goal_idxs}
 
     return eval_info, debug_info

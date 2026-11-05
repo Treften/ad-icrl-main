@@ -1,5 +1,4 @@
 # %% ------------------------------------------
-
 import os
 from typing import List, Dict, Any, Literal
 import yaml
@@ -18,67 +17,71 @@ from src.dt.eval import evaluate_in_context
 from src.dt.model import DecisionTransformer
 
 def print_debug_episodes(debug_info, n_episodes=5, grid_size=9):
-        states = torch.as_tensor(debug_info["states"]).cpu().numpy()
-        actions = torch.as_tensor(debug_info["actions"]).cpu().numpy()
-        rewards = torch.as_tensor(debug_info["rewards"]).cpu().numpy()
-        goals = debug_info["goal_idxs"]
+    states = torch.as_tensor(debug_info["states"]).cpu().numpy()
+    actions = torch.as_tensor(debug_info["actions"]).cpu().numpy()
+    rewards = torch.as_tensor(debug_info["rewards"]).cpu().numpy()
+    goals = debug_info["goal_idxs"]
 
-        action_names = {
-            0: "LEFT",
-            1: "RIGHT",
-            2: "UP",
-            3: "DOWN",
-            4: "NOOP"
-        }
+    action_names = {
+        0: "LEFT",
+        1: "RIGHT",
+        2: "UP",
+        3: "DOWN",
+        4: "NOOP"
+    }
 
-        n_episodes = min(n_episodes, len(states))
+    # [n_steps, n_episodes] -> [n_episodes, n_steps]
+    states = states.T
+    actions = actions.T
+    rewards = rewards.T
 
-        for i in range(n_episodes):
-            print(f"\n{'=' * 65}")
-            print(f"EPISODE {i + 1} | Goal: {goals[i]}")
-            print(f"{'=' * 65}")
+    n_episodes = min(n_episodes, len(goals))
 
-            episode = []
-            total_reward = 0
+    for i in range(n_episodes):
+        print(f"\n{'=' * 75}")
+        print(f"EPISODE {i + 1} | Goal: {goals[i]}")
+        print(f"{'=' * 75}")
 
-            for step, (state, action, reward) in enumerate(
-                zip(states[i], actions[i], rewards[i])
-            ):
-                x = int(state % grid_size)
-                y = int(state // grid_size)
-                reward = float(reward)
+        print(
+            f"{'STEP':<6}{'X':<5}{'Y':<5}"
+            f"{'ACTION':<10}{'REWARD':<10}"
+            f"{'NEXT X':<9}{'NEXT Y':<9}{'STATE':<8}"
+        )
 
-                episode.append({
-                    "step": step,
-                    "x": x,
-                    "y": y,
-                    "action": action_names.get(int(action), str(action)),
-                    "reward": reward,
-                    "state": int(state)
-                })
+        total_reward = 0
 
-                total_reward += reward
+        for step, (state, action, reward) in enumerate(
+            zip(states[i], actions[i], rewards[i])
+        ):
+            state = int(state)
+            action = int(action)
+            reward = float(reward)
 
-                # Не показываем padding после завершения эпизода
-                if reward > 0:
-                    break
+            x, y = state % grid_size, state // grid_size
+
+            # Следующее состояние
+            if step + 1 < len(states[i]):
+                next_state = int(states[i][step + 1])
+                next_x = next_state % grid_size
+                next_y = next_state // grid_size
+            else:
+                next_x, next_y = x, y
 
             print(
-                f"{'STEP':<6}{'X':<6}{'Y':<6}"
-                f"{'ACTION':<12}{'REWARD':<10}{'STATE':<8}"
+                f"{step:<6}{x:<5}{y:<5}"
+                f"{action_names.get(action, str(action)):<10}"
+                f"{reward:<10.3f}"
+                f"{next_x:<9}{next_y:<9}{state:<8}"
             )
 
-            for row in episode:
-                print(
-                    f"{row['step']:<6}"
-                    f"{row['x']:<6}"
-                    f"{row['y']:<6}"
-                    f"{row['action']:<12}"
-                    f"{row['reward']:<10.3f}"
-                    f"{row['state']:<8}"
-                )
+            total_reward += reward
 
-            print(f"\nTotal reward: {total_reward:.3f}")
+            # Завершение эпизода после получения награды
+            if reward > 0:
+                break
+
+        print(f"\nTotal reward: {total_reward:.3f}")
+
 @dataclass
 class EvalConfig:
     # --- init ---

@@ -176,7 +176,7 @@ class Evaluator:
                                                           eval_episodes, device, seed + n_repeat, mode)
                 _eval_info_test, _debug_info_test = evaluate_in_context(self.config.env_config, model, test_goal_idxs, 
                                                          eval_episodes, device, seed + n_repeat, mode)
-                if n_repeat == 0:
+                if n_repeat == n_repeats-1:
                     debug_info_test = _debug_info_test
                     debug_info_train = _debug_info_train
                     print_debug_episodes(debug_info_test, n_episodes=10)
